@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .cart-item {
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .heart-icon {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="cart">
+    <!-- Example items in the cart -->
+    <div class="cart-item" id="item1">
+        <span>Item 1</span>
+        <button onclick="adjustQuantity('item1', 'increment')">+</button>
+        <span id="quantity_item1">1</span>
+        <button onclick="adjustQuantity('item1', 'decrement')">-</button>
+        <button onclick="deleteItem('item1')">Delete</button>
+        <span id="price_item1">10.00</span>
+        <span class="heart-icon" onclick="toggleLike('item1')">❤️</span>
+    </div>
+
+    <div class="cart-item" id="item2">
+        <span>Item 2</span>
+        <button onclick="adjustQuantity('item2', 'increment')">+</button>
+        <span id="quantity_item2">1</span>
+        <button onclick="adjustQuantity('item2', 'decrement')">-</button>
+        <button onclick="deleteItem('item2')">Delete</button>
+        <span id="price_item2">20.00</span>
+        <span class="heart-icon" onclick="toggleLike('item2')">🤍</span>
+    </div>
+</div>
+
+<div>
+    <h3>Total Price: $<span id="totalPrice">30.00</span></h3>
+</div>
+
+<script>
+    function adjustQuantity(itemId, action) {
+        const quantityElement = document.getElementById(`quantity_${itemId}`);
+        const priceElement = document.getElementById(`price_${itemId}`);
+        let quantity = parseInt(quantityElement.innerText);
+        let price = parseFloat(priceElement.innerText);
+
+        if (action === 'increment') {
+            quantity++;
+            price += price / (quantity - 1); // Adjust price based on new quantity
+        } else if (action === 'decrement' && quantity > 1) {
+            quantity--;
+            price -= price / (quantity + 1); // Adjust price based on new quantity
+        }
+
+        quantityElement.innerText = quantity;
+        priceElement.innerText = price.toFixed(2);
+
+        updateTotalPrice();
+    }
+
+    function deleteItem(itemId) {
+        const itemElement = document.getElementById(itemId);
+        itemElement.remove();
+        updateTotalPrice();
+    }
+
+    function toggleLike(itemId) {
+        const heartIcon = document.querySelector(`#${itemId} .heart-icon`);
+        heartIcon.classList.toggle('liked');
+    }
+
+    function updateTotalPrice() {
+        const priceElements = document.querySelectorAll('[id^="price_item"]');
+        let totalPrice = 0;
+
+        priceElements.forEach(element => {
+            totalPrice += parseFloat(element.innerText);
+        });
+
+        document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
